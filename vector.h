@@ -34,7 +34,7 @@ public:
         if (other.data_ != nullptr) {
             data_ = new T[other.size_];
             for (size_t i = 0; i < size_; ++i) {
-                data_[i] = other[i];
+                data_[i] = other.data_[i];
             }
         } else {
             data_ = nullptr;
@@ -47,7 +47,7 @@ public:
     MyVector(MyVector<T>&& other) noexcept {
         data_ = other.data_;
         size_ = other.size_;
-        capacity_ = other.size_;
+        capacity_ = other.capacity_;
         other.data_ = nullptr;
         other.size_ = 0;
         other.capacity_ = 0;
@@ -75,7 +75,7 @@ public:
             if (other.data_ != nullptr) {
                 data_ = new T[other.size_];
                 size_ = other.size_;
-                capacity_ = other.capacity_;
+                capacity_ = other.size_;
                 for (size_t i = 0; i < size_; ++i) {
                     data_[i] = other.data_[i];
                 }
@@ -128,9 +128,9 @@ public:
             data = nullptr;
         }
     
-        if (data_ != nullptr) {
+        if (data != nullptr) {
             for (size_t i = 0; i < size_; ++i) {
-                data_[i] = std::move(data_[i]);
+                data[i] = std::move(data_[i]);
             }
             delete[] data_;
         }
@@ -160,7 +160,7 @@ public:
 
     void push_back(const T& value) {
         if (capacity_ == 0) {
-            capacity_ = 1;
+            reserve(1);
         } else if (size_ >= capacity_) {
             reserve(capacity_ * 2);
         }
@@ -170,7 +170,7 @@ public:
 
     void push_back(T&& value) {
         if (capacity_ == 0) {
-            capacity_ = 1;
+            reserve(1);
         } else if (size_ >= capacity_) {
             reserve(capacity_ * 2);
         }
@@ -222,7 +222,7 @@ public:
     void emplace_back(Args&&... args) {
         if (size_ >= capacity_) {
             if (capacity_ == 0) {
-                capacity_ = 1;
+                reserve(1);
             } else if (size_ >= capacity_) {
                 reserve(capacity_ * 2);
             }
@@ -241,7 +241,7 @@ public:
         size_t idx = position - begin();
         if (size_ >= capacity_) {
             if (capacity_ == 0) {
-                capacity_ = 1;
+                reserve(1);
             } else if (size_ >= capacity_) {
                 reserve(capacity_ * 2);
             }
