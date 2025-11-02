@@ -1,5 +1,4 @@
-
-<typename T>
+template <typename T>
 class MyVector {
 private:
     size_t size_;
