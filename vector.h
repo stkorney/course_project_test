@@ -30,7 +30,7 @@ public:
         }
     }
 
-    MyVector(const MyVector<T>& other) : capacity_(size), size_(size) {
+    MyVector(const MyVector<T>& other) : capacity_(other.size_), size_(other.size_) {
         if (other.data_ != nullptr) {
             data_ = new T[other.size_];
             for (size_t i = 0; i < size_; ++i) {
@@ -46,15 +46,26 @@ public:
 
     MyVector(MyVector<T>&& other) noexcept {
         data_ = other.data_;
-        size_ = other.size;
+        size_ = other.size_;
         capacity_ = other.size_;
         other.data_ = nullptr;
-        other.size = 0;
+        other.size_ = 0;
         other.capacity_ = 0;
     }
 
     template <typename Y>
     MyVector(MyVector<Y>&& other) = delete;
+
+    // From init list
+    MyVector(std::initializer_list<T> list) : size_(list.size()),
+                                              capacity_(list.size()) {
+        if (list.size() == 0) {
+            data_ = nullptr;
+        } else {
+            data_ = new T[list.size()];
+        }
+        std::copy(list.begin(), list.end(), data_);
+    }
 
     ////////////////////////////////////////////////////// operators = ////////////////////////////////////////////////////////
 
@@ -90,7 +101,7 @@ public:
             other.data_ = nullptr;
             other.capacity_ = 0;
         }
-        return *this
+        return *this;
     }
 
     template <typename Y>
@@ -106,19 +117,20 @@ public:
 
     void reserve(size_t capacity) {
         if (capacity < size_) {
-            capacity = size;
+            capacity = size_;
         }
         capacity_ = capacity;
 
+        T* data;
         if (capacity != 0) {
-            T* data = new T[capacity];
+            data = new T[capacity];
         } else {
-            T* data = nullptr;
+            data = nullptr;
         }
     
         if (data_ != nullptr) {
             for (size_t i = 0; i < size_; ++i) {
-                data[i] = std::move(data_[i]);
+                data_[i] = std::move(data_[i]);
             }
             delete[] data_;
         }
@@ -221,7 +233,7 @@ public:
 
     template<typename... Args>
     T* emplace(const T* position, Args&&... args) {
-        // Somehow emplace lets you use it if position > end(), but less then begin() + capacity_
+        // Somehow emplace lets you use it if position > end(), but less then begint() + capacity_
         if (position < begin() || position > begin() + capacity_) {
             throw std::out_of_range("Position out of reserved memory.");
         }
@@ -249,7 +261,7 @@ public:
     void swap(MyVector& other) noexcept {
         std::swap(size_, other.size_);
         std::swap(capacity_, other.capacity_);
-        using namespace std;
+        using std::swap;
         swap(data_, other.data_);
     }
 
@@ -292,4 +304,3 @@ public:
         return size_ == 0;
     }
 };
-
