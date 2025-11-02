@@ -41,7 +41,7 @@ public:
         }
     }
 
-    <typename Y>
+    template <typename Y>
     MyVector(const MyVector<Y>& other) = delete;
 
     MyVector(MyVector<T>&& other) noexcept {
@@ -53,7 +53,7 @@ public:
         other.capacity_ = 0;
     }
 
-    <typename Y>
+    template <typename Y>
     MyVector(MyVector<Y>&& other) = delete;
 
     ////////////////////////////////////////////////////// operators = ////////////////////////////////////////////////////////
@@ -77,7 +77,7 @@ public:
         return *this;
     }
 
-    <typename Y>
+    template <typename Y>
     MyVector& operator=(const MyVector<Y>& other) = delete;
 
     MyVector& operator=(MyVector<T>&& other) {
@@ -93,7 +93,7 @@ public:
         return *this
     }
 
-    <typename Y>
+    template <typename Y>
     MyVector& operator=(MyVector<Y>&& other) = delete;
 
     ////////////////////////////////////////////////////// destructor ////////////////////////////////////////////////////////
@@ -292,3 +292,4 @@ public:
         return size_ == 0;
     }
 };
+
