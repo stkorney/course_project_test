@@ -221,7 +221,7 @@ public:
 
     template<typename... Args>
     T* emplace(const T* position, Args&&... args) {
-        // Somehow emplace lets you use it if position > end(), but less then begint() + capacity_
+        // Somehow emplace lets you use it if position > end(), but less then begin() + capacity_
         if (position < begin() || position > begin() + capacity_) {
             throw std::out_of_range("Position out of reserved memory.");
         }
